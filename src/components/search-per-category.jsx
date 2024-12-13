@@ -1,11 +1,11 @@
-const SearchWithFilter = ({ items }) => {
+const SearchPerCategory = ({ items, onSelectOption }) => {
   const options = [{ value: '', label: ' ' }, ...items];
 
   return (
     <form className="search--filter">
-      <select>
+      <select onChange={(e) => onSelectOption(e.target.value)}>
         {options.map((opt, index) => (
-          <option key={index} value={opt.value}>
+          <option key={index} value={opt.value} >
             {opt.label}
           </option>
         ))}
@@ -14,4 +14,4 @@ const SearchWithFilter = ({ items }) => {
   );
 };
 
-export default SearchWithFilter;
+export default SearchPerCategory;
