@@ -1,4 +1,4 @@
-export default function (fn, delay = 300) {
+export default function (fn, delay = 400) {
   let timer;
   return function (...args) {
     clearTimeout(timer);
