@@ -6,6 +6,7 @@ class Gallery extends Component {
   state = {
     showModal: false,
     selectedImage: null,
+    swappingImages: false,
   };
 
   constructor(props) {
@@ -13,7 +14,9 @@ class Gallery extends Component {
   }
 
   createImg = ({ id, src, alt, width, ...rest }) => {
-    return <img key={id} src={src} alt={alt} width={width} {...rest} />;
+    const { swappingImages } = this.state;
+    const animationClass = swappingImages ? "" : "active";
+    return <img key={id} src={src} alt={alt} width={width} className={animationClass} {...rest} />;
   };
 
   handleShowModal = (image) => {
@@ -26,6 +29,12 @@ class Gallery extends Component {
   handleCloseModal = () => {
     this.setState({ showModal: false, selectedImage: null });
   };
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.images !== this.props.images) {
+      this.setState({ swappingImages: true })
+    }
+  }
 
   render() {
     const { isLoading, images } = this.props;

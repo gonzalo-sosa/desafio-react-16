@@ -36,7 +36,10 @@ class App extends Component {
         perPage: this.perPage,
       });
 
-      this.setState({ data: response.results.map((r) => mapData(r)) });
+      const data = response.results.map((r) => mapData(r));
+      localStorage.setItem("page-1", JSON.stringify(data))
+
+      this.setState({ data });
       if (this.state.totalPages !== response.total_pages)
         this.setState({ totalPages: response.total_pages });
       this.setState({ isLoading: false });
@@ -45,10 +48,17 @@ class App extends Component {
     }
   };
 
-  handlePageChange = async (page) => {
-    if (this.state.currentPage === page) return;
+  handlePageChange = async (nextPage) => {
+    if (this.state.currentPage === nextPage) return;
 
-    const nextPage = page;
+    let data = localStorage.getItem(`page-${nextPage}`)
+    if (data) {
+      this.setState({
+        data: JSON.parse(data),
+        currentPage: nextPage,
+      });
+      return;
+    }
 
     const { response } = await unsplash.search.getPhotos({
       query: this.state.query,
@@ -56,8 +66,12 @@ class App extends Component {
       perPage: this.perPage,
     });
 
+    data = response.results.map((r) => mapData(r))
+
+    localStorage.setItem(`page-${nextPage}`,JSON.stringify(data))
+
     this.setState({
-      data: response.results.map((r) => mapData(r)),
+      data,
       currentPage: nextPage,
     });
   };
@@ -88,6 +102,7 @@ class App extends Component {
     return (
       <>
         <ToastContainer />
+        <h1 style={{ textAlign: "center"}}>Galería de imágenes</h1>
         <main>
           <section className="block">
             <Search onChange={this.handleSearch}>
