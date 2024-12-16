@@ -17,7 +17,7 @@ class App extends Component {
     isLoading: true
   };
   perPage = 10;
-  categories = [{ value: 'cars', label: 'Autos' }, { value: "cats", label: "Gatos"}]
+  categories = [{ value: 'cars', label: 'Autos' }, { value: "cats", label: "Gatos"}, { value: "football", label: "Fútbol"}, { value: "diamond", label: "Diamantes"} ]
 
   handleSearch = async (query) => {
     if(!query) return
@@ -58,11 +58,12 @@ class App extends Component {
   };
 
   async componentDidMount() {
-    // TODO: pedir fotos random
     try {
       const { response } = await unsplash.photos.getRandom({
         count: 10
       });
+
+      if (this.state.data.length > 0) return;
       
       this.setState({ data: response.map((r) => mapData(r)), totalPages: 10, isLoading: false });  
     } catch (error) {
@@ -73,10 +74,7 @@ class App extends Component {
   render() {
     const { isLoading, data, currentPage, totalPages } = this.state;
 
-    // TODO: solucionar cantidad de páginas que se muestran en la paginación
     // TODO: almacenar en localStorage llamadas repetitivas
-    // TODO: solucionar visibilidad de Modal
-    // TODO: agregar buscar por categorías
 
     return (
       <>
@@ -84,7 +82,7 @@ class App extends Component {
         <main>
           <section className='block'>
             <Search onChange={this.handleSearch}>
-              <SearchPerCategory items={this.categories} onSelectOption={this.handleSearch}/>
+              <SearchPerCategory label={"Categorias"} items={this.categories} onSelectOption={this.handleSearch}/>
             </Search>
           </section>
           <Gallery isLoading={isLoading} images={data}>
@@ -96,6 +94,7 @@ class App extends Component {
           pageSize={this.perPage}
           currentPage={currentPage}
           onPageChange={this.handlePageChange}
+          siblingCount={2}
         />
       </>
     );
