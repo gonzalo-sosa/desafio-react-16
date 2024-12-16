@@ -53,7 +53,9 @@ class Gallery extends Component {
               title={selectedImage.alt}
               content={selectedImage.created_at}
               onClose={this.handleCloseModal}
-            />,
+            >
+              <img src={selectedImage.src} alt={selectedImage.alt} width={400} height={400} />
+            </Modal>,
             document.getElementById('modal-root'),
           )}
       </section>
