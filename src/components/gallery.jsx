@@ -1,22 +1,28 @@
 import { Component } from 'react';
 import Modal from './modal';
 import { createPortal } from 'react-dom';
+import { motion } from 'motion/react';
 
 class Gallery extends Component {
   state = {
     showModal: false,
     selectedImage: null,
-    swappingImages: false,
   };
 
-  constructor(props) {
-    super(props);
-  }
-
   createImg = ({ id, src, alt, width, ...rest }) => {
-    const { swappingImages } = this.state;
-    const animationClass = swappingImages ? "" : "active";
-    return <img key={id} src={src} alt={alt} width={width} className={animationClass} {...rest} />;
+    return (
+      <motion.img
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.8 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        key={id}
+        src={src}
+        alt={alt}
+        width={width}
+        {...rest}
+      />
+    );
   };
 
   handleShowModal = (image) => {
@@ -32,7 +38,7 @@ class Gallery extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.images !== this.props.images) {
-      this.setState({ swappingImages: true })
+      this.setState({ isLoading: true, swappingImages: true });
     }
   }
 
