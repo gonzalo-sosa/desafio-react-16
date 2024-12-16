@@ -11,6 +11,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "bootstrap": "^5.3.3",
     "lodash": "^4.17.21",
     "motion": "^11.15.0",
     "react": "^18.3.1",

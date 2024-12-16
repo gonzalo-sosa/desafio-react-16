@@ -67,15 +67,22 @@ class Gallery extends Component {
           createPortal(
             <Modal
               title={selectedImage.alt}
-              content={selectedImage.created_at}
+              content={selectedImage.createdAt}
               onClose={this.handleCloseModal}
             >
-              <img
-                src={selectedImage.src}
-                alt={selectedImage.alt}
-                width={400}
-                height={400}
-              />
+              <>
+                <img
+                  src={selectedImage.src}
+                  alt={selectedImage.alt}
+                  width={400}
+                  height={400}
+                />
+                <figcaption>{selectedImage.alt}</figcaption>
+              </>
+              <>
+                <img src={selectedImage.user.image} alt={`Profile image of ${selectedImage.user.username}`} />
+                <h6>{`@${selectedImage.user.username}`}</h6>
+              </>
             </Modal>,
             document.getElementById('modal-root'),
           )}

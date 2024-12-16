@@ -18,6 +18,7 @@ main {
 }
 
 .search {
+  margin-bottom: 20px;
   padding: 0px 15px 0px 45px;
   font-size: 14px;
   background-color: #27292a;
@@ -43,7 +44,10 @@ main {
       flex-grow: 1;
       font-size: 18px;
       padding-block: 5px;
-      border-bottom: 1px solid #ffffff;
+      border-bottom: 1px solid #35bcbf;
+      &:hover {
+        border-bottom-color: #90f6d7;
+      }
     }
   }
 }
@@ -145,8 +149,8 @@ main {
       pointer-events: none;
 
       .arrow::before {
-        border-right: 0.12em solid rgba(0, 0, 0, 0.43);
-        border-top: 0.12em solid rgba(0, 0, 0, 0.43);
+        border-right: 0.12em solid #35bcbf;
+        border-top: 0.12em solid #35bcbf;
       }
 
       &:hover {
@@ -197,22 +201,50 @@ main {
 .modal-title {
   margin: 0;
   font-size: 1.25rem;
+  text-transform: capitalize;
 }
 
 .modal-body {
+  padding-block: 10px;
   flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  justify-content: space-between;
+
+  gap: 10px;
 
   figure {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 20px;
 
     img {
-      width: 300px;
       height: 300px;
+      object-fit: cover;
     }
   }
 }
 
-.modal-footer {
+.modal-aside {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  font-size: 30px;
+}
+
+.first-color {
+  background: #90f6d7;
+}
+
+.second-color {
+  background: #35bcbf;
+}
+
+.third-color {
+  background: #41506b;
+}
+
+.fourth-color {
+  background: #263849;
 }

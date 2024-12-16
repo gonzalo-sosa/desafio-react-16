@@ -37,7 +37,7 @@ class App extends Component {
       });
 
       const data = response.results.map((r) => mapData(r));
-      localStorage.setItem('page-1', JSON.stringify(data));
+      localStorage.setItem(`query-${query}&page-1`, JSON.stringify(data));
 
       this.setState({ data });
       if (this.state.totalPages !== response.total_pages)
@@ -48,17 +48,26 @@ class App extends Component {
     }
   };
 
+  handleSearchWithFilter = (query) => {
+    this.setState({ currentPage: 1 })
+    this.handleSearch(query)
+  }
+
   handlePageChange = async (nextPage) => {
     if (this.state.currentPage === nextPage) return;
 
-    let data = localStorage.getItem(`page-${nextPage}`);
+    this.setState({ isLoading: true, currentPage: nextPage })
+
+    let data = localStorage.getItem(`query-${this.state.query}&page-${nextPage}`);
     if (data) {
       this.setState({
         data: JSON.parse(data),
-        currentPage: nextPage,
+        isLoading: false
       });
       return;
     }
+
+    this.setState({ isLoading: true })
 
     const { response } = await unsplash.search.getPhotos({
       query: this.state.query,
@@ -68,11 +77,12 @@ class App extends Component {
 
     data = response.results.map((r) => mapData(r));
 
-    localStorage.setItem(`page-${nextPage}`, JSON.stringify(data));
+    localStorage.setItem(`query-${this.state.query}&page-${nextPage}`, JSON.stringify(data));
 
     this.setState({
       data,
       currentPage: nextPage,
+      isLoading: false
     });
   };
 
@@ -90,7 +100,8 @@ class App extends Component {
         isLoading: false,
       });
     } catch (error) {
-      toast.error(error.message);
+      toast.error("Error al cargar las imágenes 😥, " + error.message + ".");
+      // TODO: renderizar mensaje de error o mostrar imágenes rotas
     }
   }
 
@@ -102,12 +113,12 @@ class App extends Component {
         <ToastContainer />
         <h1 style={{ textAlign: 'center' }}>Galería de imágenes</h1>
         <main>
-          <section className="block">
+          <section>
             <Search onChange={this.handleSearch}>
               <SearchPerCategory
                 label={'Categorias'}
                 items={this.categories}
-                onSelectOption={this.handleSearch}
+                onSelectOption={this.handleSearchWithFilter}
               />
             </Search>
           </section>

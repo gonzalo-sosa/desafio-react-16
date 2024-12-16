@@ -1,11 +1,15 @@
 import { Component } from 'react';
+import { motion } from 'motion/react';
 
 class Modal extends Component {
   render() {
-    const { title, content, onClose } = this.props;
+    const { title, onClose } = this.props;
+
+    const [FigureContent, AsideContent] = this.props.children;
 
     return (
-      <div className="modal" tabIndex="-1">
+      <motion.div initial={{ opacity: 0, scale: 0.8}} animate={{ opacity: 1, scale: 1 }}
+         className="modal" tabIndex="-1">
         <div className="modal-content">
           <header className="modal-header">
             <h5 className="modal-title">{title}</h5>
@@ -20,23 +24,15 @@ class Modal extends Component {
             </button>
           </header>
           <div className="modal-body">
-            <article>
-              {content}
-              <figure>{this.props.children}</figure>
-            </article>
+            <aside className='modal-aside'>
+              {AsideContent}
+            </aside>
+            <figure>
+              {FigureContent}
+            </figure>
           </div>
-          <footer className="modal-footer">
-            <button
-              type="button"
-              className="btn btn-secondary"
-              data-bs-dismiss="modal"
-              onClick={() => onClose()}
-            >
-              Close
-            </button>
-          </footer>
         </div>
-      </div>
+      </motion.div>
     );
   }
 }

@@ -19,7 +19,12 @@ export function mapData(image, src_type = 'small') {
     src: image.urls[src_type],
     alt: image.alt_description,
     width: 400,
-    created_at: image.created_at,
+    createdAt: image.created_at,
+    likes: image.likes,
+    user: {
+      username: image.user.username,
+      image: image.user.profile_image.medium,
+    },
     style,
   };
 }
