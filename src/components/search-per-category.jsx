@@ -1,5 +1,5 @@
-const SearchPerCategory = ({ items, onSelectOption }) => {
-  const options = [{ value: '', label: ' ' }, ...items];
+const SearchPerCategory = ({ label, items, onSelectOption }) => {
+  const options = [{ value: '', label }, ...items];
 
   return (
     <form className="search__filter">
