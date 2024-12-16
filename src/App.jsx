@@ -37,7 +37,7 @@ class App extends Component {
       });
 
       const data = response.results.map((r) => mapData(r));
-      localStorage.setItem("page-1", JSON.stringify(data))
+      localStorage.setItem('page-1', JSON.stringify(data));
 
       this.setState({ data });
       if (this.state.totalPages !== response.total_pages)
@@ -51,7 +51,7 @@ class App extends Component {
   handlePageChange = async (nextPage) => {
     if (this.state.currentPage === nextPage) return;
 
-    let data = localStorage.getItem(`page-${nextPage}`)
+    let data = localStorage.getItem(`page-${nextPage}`);
     if (data) {
       this.setState({
         data: JSON.parse(data),
@@ -66,9 +66,9 @@ class App extends Component {
       perPage: this.perPage,
     });
 
-    data = response.results.map((r) => mapData(r))
+    data = response.results.map((r) => mapData(r));
 
-    localStorage.setItem(`page-${nextPage}`,JSON.stringify(data))
+    localStorage.setItem(`page-${nextPage}`, JSON.stringify(data));
 
     this.setState({
       data,
@@ -97,12 +97,10 @@ class App extends Component {
   render() {
     const { isLoading, data, currentPage, totalPages } = this.state;
 
-    // TODO: almacenar en localStorage llamadas repetitivas
-
     return (
       <>
         <ToastContainer />
-        <h1 style={{ textAlign: "center"}}>Galería de imágenes</h1>
+        <h1 style={{ textAlign: 'center' }}>Galería de imágenes</h1>
         <main>
           <section className="block">
             <Search onChange={this.handleSearch}>
@@ -116,14 +114,14 @@ class App extends Component {
           <Gallery isLoading={isLoading} images={data}>
             <Skeleton height={400} width={400} replicate={this.perPage} />
           </Gallery>
+          <Pagination
+            totalCount={totalPages}
+            pageSize={this.perPage}
+            currentPage={currentPage}
+            onPageChange={this.handlePageChange}
+            siblingCount={2}
+          />
         </main>
-        <Pagination
-          totalCount={totalPages}
-          pageSize={this.perPage}
-          currentPage={currentPage}
-          onPageChange={this.handlePageChange}
-          siblingCount={2}
-        />
       </>
     );
   }
