@@ -28,21 +28,23 @@ class Gallery extends Component {
   };
 
   render() {
-    const { images } = this.props;
+    const { isLoading, images } = this.props;
     const { showModal, selectedImage } = this.state;
     const showImages = images && Array.isArray(images) && images.length > 0;
     const loading = (index) => (index < images.length / 2 ? 'eager' : 'lazy');
 
     return (
       <section className="gallery">
-        {showImages &&
+        {isLoading && this.props.children}
+        
+        {!isLoading && showImages &&
           images.map((image, index) => (
             this.createImg({
               ...image,
               loading: loading(index),
               onClick: () => this.handleShowModal(image),
             })
-          ))}
+        ))}
 
         {showModal &&
           selectedImage &&
