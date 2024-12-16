@@ -14,14 +14,19 @@ class App extends Component {
     query: '',
     currentPage: 1,
     totalPages: 0,
-    isLoading: true
+    isLoading: true,
   };
   perPage = 10;
-  categories = [{ value: 'cars', label: 'Autos' }, { value: "cats", label: "Gatos"}, { value: "football", label: "Fútbol"}, { value: "diamond", label: "Diamantes"} ]
+  categories = [
+    { value: 'cars', label: 'Autos' },
+    { value: 'cats', label: 'Gatos' },
+    { value: 'football', label: 'Fútbol' },
+    { value: 'diamond', label: 'Diamantes' },
+  ];
 
   handleSearch = async (query) => {
-    if(!query) return
-    
+    if (!query) return;
+
     this.setState({ query });
 
     try {
@@ -34,9 +39,9 @@ class App extends Component {
       this.setState({ data: response.results.map((r) => mapData(r)) });
       if (this.state.totalPages !== response.total_pages)
         this.setState({ totalPages: response.total_pages });
-      this.setState({ isLoading: false })    
+      this.setState({ isLoading: false });
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.message);
     }
   };
 
@@ -60,14 +65,18 @@ class App extends Component {
   async componentDidMount() {
     try {
       const { response } = await unsplash.photos.getRandom({
-        count: 10
+        count: 10,
       });
 
       if (this.state.data.length > 0) return;
-      
-      this.setState({ data: response.map((r) => mapData(r)), totalPages: 10, isLoading: false });  
+
+      this.setState({
+        data: response.map((r) => mapData(r)),
+        totalPages: 10,
+        isLoading: false,
+      });
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.message);
     }
   }
 
@@ -80,9 +89,13 @@ class App extends Component {
       <>
         <ToastContainer />
         <main>
-          <section className='block'>
+          <section className="block">
             <Search onChange={this.handleSearch}>
-              <SearchPerCategory label={"Categorias"} items={this.categories} onSelectOption={this.handleSearch}/>
+              <SearchPerCategory
+                label={'Categorias'}
+                items={this.categories}
+                onSelectOption={this.handleSearch}
+              />
             </Search>
           </section>
           <Gallery isLoading={isLoading} images={data}>

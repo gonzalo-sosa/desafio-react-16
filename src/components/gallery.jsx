@@ -36,15 +36,16 @@ class Gallery extends Component {
     return (
       <section className="gallery">
         {isLoading && this.props.children}
-        
-        {!isLoading && showImages &&
-          images.map((image, index) => (
+
+        {!isLoading &&
+          showImages &&
+          images.map((image, index) =>
             this.createImg({
               ...image,
               loading: loading(index),
               onClick: () => this.handleShowModal(image),
-            })
-        ))}
+            }),
+          )}
 
         {showModal &&
           selectedImage &&
@@ -54,7 +55,12 @@ class Gallery extends Component {
               content={selectedImage.created_at}
               onClose={this.handleCloseModal}
             >
-              <img src={selectedImage.src} alt={selectedImage.alt} width={400} height={400} />
+              <img
+                src={selectedImage.src}
+                alt={selectedImage.alt}
+                width={400}
+                height={400}
+              />
             </Modal>,
             document.getElementById('modal-root'),
           )}

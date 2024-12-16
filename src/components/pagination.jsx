@@ -5,9 +5,9 @@ const DOTS = '...';
 class Pagination extends Component {
   state = {
     currentPage: 1,
-    paginationRange: []
-  }
-  
+    paginationRange: [],
+  };
+
   onNext = () => {
     this.props.onPageChange(this.props.currentPage + 1);
   };
@@ -16,9 +16,14 @@ class Pagination extends Component {
     this.props.onPageChange(this.props.currentPage - 1);
   };
 
-  calculatePaginationRange = ({ currentPage, totalCount, pageSize, siblingCount = 1}) => {
+  calculatePaginationRange = ({
+    currentPage,
+    totalCount,
+    pageSize,
+    siblingCount = 1,
+  }) => {
     const totalPageCount = Math.ceil(totalCount / pageSize);
-    
+
     const totalPageNumbers = siblingCount + 5;
 
     /*
@@ -77,7 +82,7 @@ class Pagination extends Component {
       let middleRange = _.range(leftSiblingIndex, rightSiblingIndex);
       return [firstPageIndex, DOTS, ...middleRange, DOTS, lastPageIndex];
     }
-  }
+  };
 
   componentDidUpdate(prevProps) {
     if (
@@ -91,13 +96,10 @@ class Pagination extends Component {
     }
   }
 
-  render(){
-    const {
-      onPageChange,
-      currentPage,
-    } = this.props;
-    
-    const { paginationRange } = this.state; 
+  render() {
+    const { onPageChange, currentPage } = this.props;
+
+    const { paginationRange } = this.state;
 
     let lastPage = paginationRange[paginationRange.length - 1];
 
@@ -106,15 +108,21 @@ class Pagination extends Component {
     }
 
     return (
-      <nav className='pagination'>
+      <nav className="pagination">
         <ul className={'pagination-container'}>
           <li className="pagination-item" onClick={this.onPrevious}>
-            <button className="arrow left" disabled={currentPage === 1}></button>
+            <button
+              className="arrow left"
+              disabled={currentPage === 1}
+            ></button>
           </li>
           {paginationRange.map((pageNumber, index) => {
             if (pageNumber === DOTS) {
               return (
-                <li key={`pagination-dots-${pageNumber}-${index}`} className="pagination-item dots">
+                <li
+                  key={`pagination-dots-${pageNumber}-${index}`}
+                  className="pagination-item dots"
+                >
                   &#8230;
                 </li>
               );
@@ -140,6 +148,6 @@ class Pagination extends Component {
       </nav>
     );
   }
-};
+}
 
 export default Pagination;
