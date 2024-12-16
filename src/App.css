@@ -1,12 +1,14 @@
 img {
   max-width: 100%;
   object-fit: cover;
+  border-radius: 4px;
 }
 
 main {
   min-height: 100dvh;
   max-width: 100dvw;
   padding: 1rem;
+  background-color: #1a1a1a;
 }
 
 .block {
@@ -15,21 +17,41 @@ main {
 
 .search {
   margin: auto;
+  max-width: 400px;
+  border-radius: 10px;
+  padding: 10px;
 
-  form {
+  .search__form {
+    width: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 5px;
-    padding: 5px;
+    gap: 10px;
+    margin-bottom: 10px;
+
+    input {
+      background-color: transparent;
+      border: none;
+      outline: none;
+      flex-grow: 1;
+    }
   }
 }
 
-.search--filter {
-  margin: auto;
+.search__filter {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  select {
+    width: 100%;
+  }
+}
+
+.skeleton {
+  background-color: #adadad;
+  border-radius: 4px;
+  animation: pulse 1.5s infinite;
 }
 
 .gallery {
@@ -37,9 +59,41 @@ main {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  justify-items: center;
   align-items: stretch;
-  gap: 10px;
-  padding: 1rem;
+  gap: 20px;
+
+  img {
+    view-timeline-name: --image;
+    view-timeline-axis: block;
+
+    animation-timeline: --image;
+    animation-name: show;
+
+    animation-range: entry 10% cover 40%;
+    animation-fill-mode: both;
+  }
+}
+
+@keyframes show {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.95);
+  }
 }
 
 .pagination {

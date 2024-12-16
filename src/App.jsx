@@ -6,6 +6,7 @@ import Search from './components/search';
 import Gallery from './components/gallery';
 import Pagination from './components/pagination';
 import SearchPerCategory from './components/search-per-category';
+import Skeleton from './components/skeleton';
 
 class App extends Component {
   state = {
@@ -13,11 +14,14 @@ class App extends Component {
     query: '',
     currentPage: 1,
     totalPages: 0,
+    isLoading: true
   };
   perPage = 10;
   categories = [{ value: 'cars', label: 'Autos' }, { value: "cats", label: "Gatos"}]
 
   handleSearch = async (query) => {
+    if(!query) return
+    
     this.setState({ query });
 
     try {
@@ -30,6 +34,7 @@ class App extends Component {
       this.setState({ data: response.results.map((r) => mapData(r)) });
       if (this.state.totalPages !== response.total_pages)
         this.setState({ totalPages: response.total_pages });
+      this.setState({ isLoading: false })    
     } catch (error) {
       toast.error(error.message)
     }
@@ -52,8 +57,21 @@ class App extends Component {
     });
   };
 
+  async componentDidMount() {
+    // TODO: pedir fotos random
+    try {
+      const { response } = await unsplash.photos.getRandom({
+        count: 10
+      });
+      
+      this.setState({ data: response.map((r) => mapData(r)), totalPages: 10, isLoading: false });  
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+
   render() {
-    const { data, currentPage, totalPages } = this.state;
+    const { isLoading, data, currentPage, totalPages } = this.state;
 
     // TODO: solucionar cantidad de páginas que se muestran en la paginación
     // TODO: almacenar en localStorage llamadas repetitivas
@@ -65,10 +83,13 @@ class App extends Component {
         <ToastContainer />
         <main>
           <section className='block'>
-            <Search onChange={this.handleSearch} />
-            <SearchPerCategory items={this.categories} onSelectOption={this.handleSearch}/>
+            <Search onChange={this.handleSearch}>
+              <SearchPerCategory items={this.categories} onSelectOption={this.handleSearch}/>
+            </Search>
           </section>
-          <Gallery images={data} />
+          <Gallery isLoading={isLoading} images={data}>
+            <Skeleton height={400} width={400} replicate={this.perPage} />
+          </Gallery>
         </main>
         <Pagination
           totalCount={totalPages}
