@@ -6,9 +6,8 @@ class Modal extends Component {
 
     return (
       <div className="modal" tabIndex="-1">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
+        <div className="modal-content">
+            <header className="modal-header">
               <h5 className="modal-title">{title}</h5>
               <button
                 type="button"
@@ -16,14 +15,17 @@ class Modal extends Component {
                 data-bs-dismiss="modal"
                 aria-label="Close"
                 onClick={() => onClose()}
-              ></button>
-            </div>
+              >X</button>
+            </header>
             <div className="modal-body">
-              <figure>
-                <figcaption>{content}</figcaption>
-              </figure>
+              <article>
+                {content}  
+                <figure>
+                  {this.props.children}
+                </figure>
+              </article>
             </div>
-            <div className="modal-footer">
+            <footer className="modal-footer">
               <button
                 type="button"
                 className="btn btn-secondary"
@@ -32,12 +34,8 @@ class Modal extends Component {
               >
                 Close
               </button>
-              <button type="button" className="btn btn-primary">
-                Save changes
-              </button>
-            </div>
+            </footer>
           </div>
-        </div>
       </div>
     );
   }
