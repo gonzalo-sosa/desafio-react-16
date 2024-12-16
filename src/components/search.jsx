@@ -7,7 +7,7 @@ class Search extends Component {
 
     return (
       <search className="search">
-        <form onSubmit={(e) => e.preventDefault()}>
+        <form className='search__form' onSubmit={(e) => e.preventDefault()}>
           <label htmlFor="photo">Busca una imagen</label>
           <input
             type="search"
@@ -18,6 +18,7 @@ class Search extends Component {
             onChange={debounce((e) => onChange(e.target.value))}
           />
         </form>
+        {this.props.children}
       </search>
     );
   }
