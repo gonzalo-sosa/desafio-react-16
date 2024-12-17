@@ -2,6 +2,7 @@ import { Component } from 'react';
 import Modal from './modal';
 import { createPortal } from 'react-dom';
 import { motion } from 'motion/react';
+import LikeIcon from './like-icon';
 
 class Gallery extends Component {
   state = {
@@ -66,11 +67,10 @@ class Gallery extends Component {
           selectedImage &&
           createPortal(
             <Modal
-              title={selectedImage.alt}
-              content={selectedImage.createdAt}
+              title={'Descripción de imagen'}
               onClose={this.handleCloseModal}
             >
-              <>
+              <figure>
                 <img
                   src={selectedImage.src}
                   alt={selectedImage.alt}
@@ -78,10 +78,36 @@ class Gallery extends Component {
                   height={400}
                 />
                 <figcaption>{selectedImage.alt}</figcaption>
-              </>
+              </figure>
               <>
-                <img src={selectedImage.user.image} alt={`Profile image of ${selectedImage.user.username}`} />
-                <h6>{`@${selectedImage.user.username}`}</h6>
+                <div className="row">
+                  <div className="col-md-auto">
+                    <img
+                      className="rounded-circle"
+                      src={selectedImage.user.image}
+                      alt={`Profile image of ${selectedImage.user.username}`}
+                    />
+                  </div>
+                  <div className="col">
+                    <h6>{`@${selectedImage.user.username}`}</h6>
+                    <time dateTime={selectedImage.created_At}>
+                      {new Date(selectedImage.created_at).toLocaleDateString()}
+                    </time>
+                  </div>
+                </div>
+                <div className="row mt-2">
+                  <div className="col-md-auto">
+                    <div
+                      className="d-flex align-items-center border rounded py-2 px-3"
+                      style={{ gap: '10px' }}
+                    >
+                      <LikeIcon isLiked={false} />
+                      <span className="d-inline-block mx-auto">
+                        {selectedImage.likes}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </>
             </Modal>,
             document.getElementById('modal-root'),
