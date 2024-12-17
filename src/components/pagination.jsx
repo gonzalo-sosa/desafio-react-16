@@ -108,22 +108,27 @@ class Pagination extends Component {
     }
 
     return (
-      <nav className="pagination">
-        <ul className={'pagination-container'}>
-          <li className="pagination-item" onClick={this.onPrevious}>
+      <nav className="mx-auto">
+        <ul className="pagination align-items-center p-2">
+          <li className="page-item" onClick={this.onPrevious}>
             <button
-              className="arrow left"
+              className="page-link"
+              aria-label="Previous"
               disabled={currentPage === 1}
-            ></button>
+            >
+              <span aria-hidden="true">&laquo;</span>
+            </button>
           </li>
           {paginationRange.map((pageNumber, index) => {
             if (pageNumber === DOTS) {
               return (
                 <li
                   key={`pagination-dots-${pageNumber}-${index}`}
-                  className="pagination-item dots"
+                  className="page-item"
                 >
-                  &#8230;
+                  <a className="page-link" href="#">
+                    &#8230;
+                  </a>
                 </li>
               );
             }
@@ -131,18 +136,23 @@ class Pagination extends Component {
             return (
               <li
                 key={pageNumber}
-                className={`pagination-item ${pageNumber === currentPage ? 'selected' : ''}`}
+                className={`page-item ${pageNumber === currentPage ? 'active' : ''}`}
                 onClick={() => onPageChange(pageNumber)}
               >
-                {pageNumber}
+                <a className="page-link" href="#">
+                  {pageNumber}
+                </a>
               </li>
             );
           })}
-          <li className={'pagination-item'} onClick={this.onNext}>
+          <li className="page-item" onClick={this.onNext}>
             <button
-              className="arrow right"
+              className="page-link"
               disabled={currentPage === lastPage}
-            ></button>
+              aria-label="Next"
+            >
+              <span aria-hidden="true">&raquo;</span>
+            </button>
           </li>
         </ul>
       </nav>
