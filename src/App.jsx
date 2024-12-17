@@ -15,6 +15,7 @@ class App extends Component {
     currentPage: 1,
     totalPages: 0,
     isLoading: true,
+    error: null,
   };
   perPage = 10;
   categories = [
@@ -27,7 +28,7 @@ class App extends Component {
   handleSearch = async (query) => {
     if (!query) return;
 
-    this.setState({ query });
+    this.setState({ query, isLoading: true, currentPage: 1 });
 
     try {
       const { response } = await unsplash.search.getPhotos({
@@ -36,54 +37,69 @@ class App extends Component {
         perPage: this.perPage,
       });
 
+      localStorage.setItem(`query-${query}&page-1`, JSON.stringify(response));
+
       const data = response.results.map((r) => mapData(r));
-      localStorage.setItem(`query-${query}&page-1`, JSON.stringify(data));
 
       this.setState({ data });
       if (this.state.totalPages !== response.total_pages)
         this.setState({ totalPages: response.total_pages });
-      this.setState({ isLoading: false });
+      this.setState({ isLoading: false, error: null });
     } catch (error) {
       toast.error(error.message);
+      this.setState({ error: { message: 'Error al solicitar las imágenes.' } });
     }
   };
 
   handleSearchWithFilter = (query) => {
-    this.setState({ currentPage: 1 })
-    this.handleSearch(query)
-  }
+    this.setState({ currentPage: 1 });
+    this.handleSearch(query);
+  };
 
   handlePageChange = async (nextPage) => {
     if (this.state.currentPage === nextPage) return;
 
-    this.setState({ isLoading: true, currentPage: nextPage })
+    this.setState({ isLoading: true, currentPage: nextPage });
 
-    let data = localStorage.getItem(`query-${this.state.query}&page-${nextPage}`);
-    if (data) {
+    let value = localStorage.getItem(
+      `query-${this.state.query}&page-${nextPage}`,
+    );
+    if (value) {
+      const { results, total_pages } = JSON.parse(value);
+
       this.setState({
-        data: JSON.parse(data),
-        isLoading: false
+        data: results.map((r) => mapData(r)),
+        isLoading: false,
+        error: null,
+        totalPages: total_pages,
       });
       return;
     }
 
-    this.setState({ isLoading: true })
+    try {
+      const { response } = await unsplash.search.getPhotos({
+        query: this.state.query,
+        page: nextPage,
+        perPage: this.perPage,
+      });
 
-    const { response } = await unsplash.search.getPhotos({
-      query: this.state.query,
-      page: nextPage,
-      perPage: this.perPage,
-    });
+      localStorage.setItem(
+        `query-${this.state.query}&page-${nextPage}`,
+        JSON.stringify(response),
+      );
 
-    data = response.results.map((r) => mapData(r));
+      const data = response.results.map((r) => mapData(r));
 
-    localStorage.setItem(`query-${this.state.query}&page-${nextPage}`, JSON.stringify(data));
-
-    this.setState({
-      data,
-      currentPage: nextPage,
-      isLoading: false
-    });
+      this.setState({
+        data,
+        isLoading: false,
+        totalPages: response.total_pages,
+        error: null,
+      });
+    } catch (error) {
+      toast.error('Error al solicitar más imágenes.');
+      this.setState({ error: { message: 'Error al solicitar más imágenes.' } });
+    }
   };
 
   async componentDidMount() {
@@ -98,22 +114,27 @@ class App extends Component {
         data: response.map((r) => mapData(r)),
         totalPages: 10,
         isLoading: false,
+        error: null,
       });
     } catch (error) {
-      toast.error("Error al cargar las imágenes 😥, " + error.message + ".");
-      // TODO: renderizar mensaje de error o mostrar imágenes rotas
+      toast.error('Error al cargar las imágenes 😥.');
+      this.setState({
+        error: {
+          message:
+            'Error al cargar las imágenes, intente nuevamente más tarde.',
+        },
+      });
     }
   }
 
   render() {
-    const { isLoading, data, currentPage, totalPages } = this.state;
+    const { isLoading, data, currentPage, totalPages, error } = this.state;
 
     return (
       <>
         <ToastContainer />
-        <h1 style={{ textAlign: 'center' }}>Galería de imágenes</h1>
         <main>
-          <section>
+          <section className="block">
             <Search onChange={this.handleSearch}>
               <SearchPerCategory
                 label={'Categorias'}
@@ -122,16 +143,29 @@ class App extends Component {
               />
             </Search>
           </section>
-          <Gallery isLoading={isLoading} images={data}>
-            <Skeleton height={400} width={400} replicate={this.perPage} />
-          </Gallery>
-          <Pagination
-            totalCount={totalPages}
-            pageSize={this.perPage}
-            currentPage={currentPage}
-            onPageChange={this.handlePageChange}
-            siblingCount={2}
-          />
+          {error && (
+            <div
+              className="alert alert-danger d-flex align-items-center"
+              role="alert"
+            >
+              <div>{error.message}</div>
+            </div>
+          )}
+          {!error && (
+            <>
+              <Gallery isLoading={isLoading} images={data}>
+                <Skeleton height={400} width={400} replicate={this.perPage} />
+              </Gallery>
+              <div className="mt-2 d-flex justify-content-center">
+                <Pagination
+                  totalCount={totalPages}
+                  pageSize={this.perPage}
+                  currentPage={currentPage}
+                  onPageChange={this.handlePageChange}
+                />
+              </div>
+            </>
+          )}
         </main>
       </>
     );
