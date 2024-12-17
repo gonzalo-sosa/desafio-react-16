@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import './App.css';
 import { Component } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
@@ -28,6 +29,8 @@ class App extends Component {
   handleSearch = async (query) => {
     if (!query) return;
 
+    // TODO: limpieza de query
+
     this.setState({ query, isLoading: true, currentPage: 1 });
 
     try {
@@ -46,7 +49,7 @@ class App extends Component {
         this.setState({ totalPages: response.total_pages });
       this.setState({ isLoading: false, error: null });
     } catch (error) {
-      toast.error(error.message);
+      toast.error('Error al solicitar las imágenes.');
       this.setState({ error: { message: 'Error al solicitar las imágenes.' } });
     }
   };

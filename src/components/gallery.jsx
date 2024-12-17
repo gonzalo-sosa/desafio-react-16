@@ -37,12 +37,6 @@ class Gallery extends Component {
     this.setState({ showModal: false, selectedImage: null });
   };
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.images !== this.props.images) {
-      this.setState({ isLoading: true, swappingImages: true });
-    }
-  }
-
   render() {
     const { isLoading, images } = this.props;
     const { showModal, selectedImage } = this.state;
@@ -61,7 +55,7 @@ class Gallery extends Component {
               loading: loading(index),
               onClick: () => this.handleShowModal(image),
             }),
-          )}
+        )}
 
         {showModal &&
           selectedImage &&
