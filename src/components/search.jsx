@@ -12,7 +12,7 @@ class Search extends Component {
             id="searchicon"
             width="22"
             height="22"
-            src="https://img.icons8.com/sf-black/100/ffffff/search.png"
+            src="https://img.icons8.com/sf-black/100/000000/search.png"
             alt="search"
           />
           <input
