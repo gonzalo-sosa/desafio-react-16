@@ -19,7 +19,7 @@ export function mapData(image, src_type = 'small') {
     src: image.urls[src_type],
     alt: image.alt_description,
     width: 400,
-    createdAt: image.created_at,
+    created_at: image.created_at,
     likes: image.likes,
     user: {
       username: image.user.username,
